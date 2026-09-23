@@ -1,0 +1,28 @@
+{
+  "name": "focusflow-webapp",
+  "version": "1.0.0",
+  "description": "Production-quality education & focus web application for students",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build",
+    "seed": "npm --prefix server run seed"
+  },
+  "keywords": [
+    "education",
+    "study",
+    "focus-timer",
+    "pomodoro",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "FocusFlow Team",
+  "license": "MIT"
+}
