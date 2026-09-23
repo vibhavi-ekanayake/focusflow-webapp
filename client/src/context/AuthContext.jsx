@@ -56,7 +56,16 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: userData };
       }
     } catch (err) {
-      const message = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      let message = err.response?.data?.message;
+      if (!message) {
+        if (err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
+          message = `Cannot connect to API server (${api.defaults.baseURL}). Please verify your backend is running.`;
+        } else if (err.response?.status === 404) {
+          message = `API endpoint not found (404) at ${api.defaults.baseURL}.`;
+        } else {
+          message = err.message || 'Login failed. Please check your credentials.';
+        }
+      }
       addToast(message, 'error');
       return { success: false, error: message };
     }
@@ -74,7 +83,16 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: userData };
       }
     } catch (err) {
-      const message = err.response?.data?.message || 'Registration failed. Please try again.';
+      let message = err.response?.data?.message;
+      if (!message) {
+        if (err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
+          message = `Cannot connect to API server (${api.defaults.baseURL}). Please verify your backend is running.`;
+        } else if (err.response?.status === 404) {
+          message = `API endpoint not found (404) at ${api.defaults.baseURL}. Check VITE_API_URL on Vercel.`;
+        } else {
+          message = err.message || 'Registration failed. Please try again.';
+        }
+      }
       addToast(message, 'error');
       return { success: false, error: message };
     }
