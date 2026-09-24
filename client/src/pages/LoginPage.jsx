@@ -81,22 +81,6 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Quick Demo Credentials Box */}
-          <div className="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 dark:text-indigo-300">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                <span>Demo Student Account</span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                demo@focusflow.edu / password123
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleDemoFill} className="text-xs py-1 px-2.5 h-auto">
-              Auto-fill
-            </Button>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Email Address"
