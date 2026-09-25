@@ -10,6 +10,7 @@ import sessionRoutes from './routes/sessionRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import goalRoutes from './routes/goalRoutes.js';
 import roomRoutes from './routes/roomRoutes.js';
+import rankingRoutes from './routes/rankingRoutes.js';
 
 import User from './models/User.js';
 import { seedDemoData } from './utils/seedData.js';
@@ -62,6 +63,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/rankings', rankingRoutes);
 
 // Error Handling Middleware
 app.use(notFound);

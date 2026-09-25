@@ -12,7 +12,8 @@ import {
   Clock,
   Sun,
   Moon,
-  Users
+  Users,
+  Trophy
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Focus Timer', path: '/timer', icon: Timer },
   { label: 'Study Rooms', path: '/rooms', icon: Users },
+  { label: 'Rankers', path: '/rankers', icon: Trophy },
   { label: 'Study Sessions', path: '/sessions', icon: History },
   { label: 'Analytics', path: '/analytics', icon: BarChart3 },
   { label: 'Goals', path: '/goals', icon: Target },

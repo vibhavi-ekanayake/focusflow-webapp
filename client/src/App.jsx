@@ -22,6 +22,7 @@ import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import RoomsPage from './pages/RoomsPage';
 import RoomDetailPage from './pages/RoomDetailPage';
+import RankersPage from './pages/RankersPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
                     <Route path="/timer" element={<TimerPage />} />
                     <Route path="/rooms" element={<RoomsPage />} />
                     <Route path="/rooms/:code" element={<RoomDetailPage />} />
+                    <Route path="/rankers" element={<RankersPage />} />
                     <Route path="/sessions" element={<SessionsPage />} />
                     <Route path="/analytics" element={<AnalyticsPage />} />
                     <Route path="/goals" element={<GoalsPage />} />
