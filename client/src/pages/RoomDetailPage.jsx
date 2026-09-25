@@ -65,6 +65,13 @@ const RoomDetailPage = () => {
   }, [code, addToast, navigate]);
 
   useEffect(() => {
+    // Ensure viewport starts at top (Timer) when entering a room
+    window.scrollTo(0, 0);
+    const mainEl = document.querySelector('main');
+    if (mainEl) {
+      mainEl.scrollTop = 0;
+    }
+
     fetchRoomDetails();
 
     // Poll room data every 3.5 seconds to synchronize timer, statuses, and chat

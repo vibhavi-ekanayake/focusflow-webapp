@@ -10,22 +10,34 @@ const RoomChat = ({
   isSending = false
 }) => {
   const [inputText, setInputText] = useState('');
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const prevCountRef = useRef(0);
   const { user } = useAuth();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (smooth = true) => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Scroll strictly inside the chat box container, never scrolling the main webpage
+    if (messages.length > 0) {
+      const isInitial = prevCountRef.current === 0;
+      scrollToBottom(!isInitial);
+      prevCountRef.current = messages.length;
+    }
+  }, [messages.length]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputText.trim() || isSending) return;
     onSendMessage(inputText.trim());
     setInputText('');
+    setTimeout(() => scrollToBottom(true), 80);
   };
 
   return (
@@ -46,7 +58,7 @@ const RoomChat = ({
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-1 text-xs">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto space-y-3 pr-1 text-xs">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center text-slate-400">
             <Sparkles className="w-6 h-6 mb-1 text-indigo-400 opacity-60" />
@@ -100,7 +112,6 @@ const RoomChat = ({
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Box */}

@@ -92,11 +92,6 @@ const LandingPage = () => {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-indigo-500/15 to-violet-500/15 dark:from-indigo-500/20 dark:to-violet-500/20 blur-3xl rounded-full pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200/60 dark:border-indigo-800/80 text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-6 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Built for university students, high schoolers & lifelong learners</span>
-          </div>
-
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-[1.1]">
             Focus Better.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500">
@@ -147,7 +142,7 @@ const LandingPage = () => {
                 {/* Timer Mockup */}
                 <div className="md:col-span-2 p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-800 flex flex-col items-center justify-center text-center">
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 mb-3">
-                    Computer Science • Algorithms
+                    ICT • Algorithms
                   </span>
                   <div className="text-6xl font-mono font-extrabold text-slate-900 dark:text-white tracking-tight">
                     25:00
