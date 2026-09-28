@@ -135,6 +135,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLogin = async (googleData) => {
+    try {
+      const res = await api.post('/auth/google', googleData);
+      if (res.data?.success) {
+        const { token: newToken, user: userData } = res.data;
+        localStorage.setItem('temora_token', newToken);
+        localStorage.setItem('focusflow_token', newToken);
+        setToken(newToken);
+        setUser(userData);
+        addToast(`Welcome to Temora, ${userData.name}!`, 'success');
+        return { success: true, user: userData };
+      }
+    } catch (err) {
+      let message = err.response?.data?.message;
+      if (!message) {
+        if (err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
+          message = `Cannot connect to API server (${api.defaults.baseURL}). Please verify your backend is running.`;
+        } else {
+          message = err.message || 'Google sign-in failed. Please try again.';
+        }
+      }
+      addToast(message, 'error');
+      return { success: false, error: message };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -144,6 +170,7 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         login,
         register,
+        googleLogin,
         logout,
         updateUserProfile,
         updateUserSettings,

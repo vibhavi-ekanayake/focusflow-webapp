@@ -4,6 +4,7 @@ import { User, Mail, Lock, Clock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
+import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -157,6 +158,19 @@ const RegisterPage = () => {
               Create Account
             </Button>
           </form>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-slate-800" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-slate-900 px-3 text-slate-400 font-medium">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <GoogleSignInButton text="Sign up with Google" />
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
             Already have an account?{' '}
