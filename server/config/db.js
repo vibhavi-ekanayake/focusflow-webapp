@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 let mongoMemoryServerInstance = null;
 
 export const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/focusflow';
+  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/temora';
 
   try {
     // Attempt standard connection with 3-second server selection timeout

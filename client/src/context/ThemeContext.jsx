@@ -4,7 +4,7 @@ const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('temora_theme') || localStorage.getItem('focusflow_theme');
+    const saved = localStorage.getItem('temora_theme');
     if (saved) return saved;
     return 'light'; // Light theme is default
   });

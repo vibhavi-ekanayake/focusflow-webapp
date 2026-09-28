@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 export const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'super_secret_focusflow_jwt_token_key_2026_xyz987', {
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'super_secret_temora_jwt_token_key_2026_xyz987', {
     expiresIn: process.env.JWT_EXPIRE || '30d'
   });
 };
@@ -18,7 +18,7 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET || 'super_secret_focusflow_jwt_token_key_2026_xyz987'
+        process.env.JWT_SECRET || 'super_secret_temora_jwt_token_key_2026_xyz987'
       );
 
       req.user = await User.findById(decoded.id).select('-password');

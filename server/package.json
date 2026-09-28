@@ -1,7 +1,7 @@
 {
-  "name": "focusflow-server",
+  "name": "temora-server",
   "version": "1.0.0",
-  "description": "Backend API for FocusFlow education focus platform",
+  "description": "Backend API for Temora education focus platform",
   "main": "server.js",
   "type": "module",
   "scripts": {

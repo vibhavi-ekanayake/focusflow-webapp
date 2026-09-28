@@ -6,15 +6,13 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token'));
+  const [token, setToken] = useState(() => localStorage.getItem('temora_token'));
   const [isLoading, setIsLoading] = useState(true);
   const { addToast } = useToast();
 
   const logout = useCallback(() => {
     localStorage.removeItem('temora_token');
-    localStorage.removeItem('focusflow_token');
     localStorage.removeItem('temora_user');
-    localStorage.removeItem('focusflow_user');
     setToken(null);
     setUser(null);
   }, []);
@@ -22,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   // Check auth state on mount
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token');
+      const storedToken = localStorage.getItem('temora_token');
       if (!storedToken) {
         setIsLoading(false);
         return;
@@ -52,7 +50,6 @@ export const AuthProvider = ({ children }) => {
       if (res.data?.success) {
         const { token: newToken, user: userData } = res.data;
         localStorage.setItem('temora_token', newToken);
-        localStorage.setItem('focusflow_token', newToken);
         setToken(newToken);
         setUser(userData);
         addToast(`Welcome back, ${userData.name}!`, 'success');
@@ -80,7 +77,6 @@ export const AuthProvider = ({ children }) => {
       if (res.data?.success) {
         const { token: newToken, user: userData } = res.data;
         localStorage.setItem('temora_token', newToken);
-        localStorage.setItem('focusflow_token', newToken);
         setToken(newToken);
         setUser(userData);
         addToast(`Welcome to Temora, ${userData.name}!`, 'success');
@@ -109,7 +105,6 @@ export const AuthProvider = ({ children }) => {
         const updatedUser = { ...user, ...res.data.user };
         setUser(updatedUser);
         localStorage.setItem('temora_user', JSON.stringify(updatedUser));
-        localStorage.setItem('focusflow_user', JSON.stringify(updatedUser));
         addToast('Profile updated successfully', 'success');
         return { success: true };
       }
@@ -141,7 +136,6 @@ export const AuthProvider = ({ children }) => {
       if (res.data?.success) {
         const { token: newToken, user: userData } = res.data;
         localStorage.setItem('temora_token', newToken);
-        localStorage.setItem('focusflow_token', newToken);
         setToken(newToken);
         setUser(userData);
         addToast(`Welcome to Temora, ${userData.name}!`, 'success');

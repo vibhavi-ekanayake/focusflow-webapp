@@ -1,5 +1,5 @@
 {
-  "name": "focusflow-webapp",
+  "name": "temora-webapp",
   "version": "1.0.0",
   "description": "Production-quality education & focus web application for students",
   "private": true,
@@ -23,6 +23,6 @@
     "express",
     "mongodb"
   ],
-  "author": "FocusFlow Team",
+  "author": "Temora Team",
   "license": "MIT"
 }

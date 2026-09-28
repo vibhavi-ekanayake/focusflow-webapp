@@ -13,7 +13,7 @@ export const seedDemoData = async (shouldClose = false) => {
     }
 
     console.log('[Seed] Clearing existing demo data...');
-    const oldUsers = await User.find({ email: { $in: ['demo@focusflow.edu', 'demo@temora.edu'] } });
+    const oldUsers = await User.find({ email: 'demo@temora.edu' });
     for (const u of oldUsers) {
       await StudySession.deleteMany({ userId: u._id });
       await User.deleteOne({ _id: u._id });
