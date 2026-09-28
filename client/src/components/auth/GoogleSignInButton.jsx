@@ -62,35 +62,47 @@ const GoogleSignInButton = ({ text = 'Continue with Google', className = '' }) =
 
   // Initialize official Google Identity Services if a real client ID is present
   useEffect(() => {
-    if (!googleClientId || !window.google?.accounts?.id) return;
+    if (!googleClientId) return;
 
-    try {
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: async (response) => {
-          if (!response?.credential) return;
-          setIsLoading(true);
-          const result = await googleLogin({ credential: response.credential });
-          setIsLoading(false);
-          if (result?.success) {
-            navigate('/dashboard');
-          }
-        },
-        auto_select: false,
-        cancel_on_tap_outside: true
-      });
-
-      if (gsiRenderRef.current) {
-        window.google.accounts.id.renderButton(gsiRenderRef.current, {
-          theme: 'outline',
-          size: 'large',
-          width: '100%',
-          text: 'continue_with',
-          shape: 'pill'
+    const initGsi = () => {
+      if (!window.google?.accounts?.id) return false;
+      try {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: async (response) => {
+            if (!response?.credential) return;
+            setIsLoading(true);
+            const result = await googleLogin({ credential: response.credential });
+            setIsLoading(false);
+            if (result?.success) {
+              navigate('/dashboard');
+            }
+          },
+          auto_select: false,
+          cancel_on_tap_outside: true
         });
+
+        if (gsiRenderRef.current) {
+          window.google.accounts.id.renderButton(gsiRenderRef.current, {
+            theme: 'outline',
+            size: 'large',
+            width: '100%',
+            text: 'continue_with',
+            shape: 'pill'
+          });
+        }
+        return true;
+      } catch (err) {
+        console.warn('Google Identity Services init notice:', err);
+        return false;
       }
-    } catch (err) {
-      console.warn('Google Identity Services init notice:', err);
+    };
+
+    if (!initGsi()) {
+      const interval = setInterval(() => {
+        if (initGsi()) clearInterval(interval);
+      }, 300);
+      return () => clearInterval(interval);
     }
   }, [googleClientId, googleLogin, navigate]);
 
