@@ -4,7 +4,7 @@ A production-quality education-focused web application designed to help students
 
 ---
 
-## 🛠 Tech Stack
+# Tech Stack
 
 - **Frontend**: React.js 18 (Vite, pure JavaScript — No TypeScript)
 - **Styling**: Tailwind CSS (with persistent Dark Mode support)
@@ -18,7 +18,7 @@ A production-quality education-focused web application designed to help students
 
 ---
 
-## 🚀 Key Features
+# Key Features
 
 1. **Tab-Proof Focus Timer**:
    - Calculates time remaining using timestamp deltas (`Date.now()`) rather than drift-prone simple intervals.
@@ -56,77 +56,3 @@ A production-quality education-focused web application designed to help students
 7. **Student Profile & Settings (`/profile`, `/settings`)**:
    - Avatar theme picker, display name updates, and password change.
    - Dark/Light mode toggle, default focus/break duration preferences, audio chime settings.
-
----
-
-## 💻 Getting Started
-
-### 1. Environment Configuration
-
-Copy the sample environment file in `server/`:
-```bash
-# In server directory:
-cp .env.example .env
-```
-Default `.env` settings:
-```env
-PORT=5000
-NODE_ENV=development
-CLIENT_URL=http://localhost:5173
-MONGO_URI=mongodb://127.0.0.1:27017/focusflow
-JWT_SECRET=super_secret_focusflow_jwt_token_key_2026_xyz987
-JWT_EXPIRE=30d
-```
-> *Note: If a local MongoDB instance is not currently active, the server will seamlessly boot an embedded in-memory MongoDB runner so you can test all features immediately.*
-
-### 2. Seed Demo Data (Optional)
-
-To seed realistic study history, subjects, and a demo student account:
-```bash
-npm --prefix server run seed
-```
-Demo Credentials:
-- **Email**: `demo@focusflow.edu`
-- **Password**: `password123`
-
-### 3. Start the Backend API Server
-```bash
-npm --prefix server run dev
-# Server will listen on http://localhost:5000
-# Health check: http://localhost:5000/api/health
-```
-
-### 4. Start the Frontend Client
-```bash
-npm --prefix client run dev
-# Vite client will run on http://localhost:5173
-```
-
----
-
-## 🌐 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` — Create a new student account
-- `POST /api/auth/login` — Sign in and obtain JWT
-- `POST /api/auth/logout` — End user session
-- `GET /api/auth/me` — Retrieve current authenticated user
-
-### User & Profile
-- `GET /api/users/profile` — Full profile with aggregate study statistics
-- `PUT /api/users/profile` — Update name, avatar, or password
-- `PUT /api/users/settings` — Update theme and timer preferences
-
-### Study Sessions
-- `POST /api/sessions` — Record a completed study session
-- `GET /api/sessions` — Search, filter, and paginate previous sessions
-- `GET /api/sessions/:id` — Retrieve a single session
-- `DELETE /api/sessions/:id` — Remove a session
-
-### Analytics & Goals
-- `GET /api/analytics/overview` — Dashboard summary stats & streak
-- `GET /api/analytics/weekly` — 7-day breakdown & week-over-week comparison
-- `GET /api/analytics/monthly` — 30-day study trend
-- `GET /api/analytics/subjects` — Distribution by subject
-- `GET /api/goals` — Live daily and weekly goal progress
-- `PUT /api/goals` — Update daily and weekly targets
