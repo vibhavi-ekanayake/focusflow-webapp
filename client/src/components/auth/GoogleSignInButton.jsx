@@ -1,29 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Modal from '../common/Modal';
-import { User, Mail, Sparkles, HelpCircle, ArrowRight, Check } from 'lucide-react';
-
-const SAMPLE_GOOGLE_ACCOUNTS = [
-  {
-    name: 'Alex Rivera',
-    email: 'alex.rivera@gmail.com',
-    avatar: 'avatar-1',
-    role: 'Computer Science • Year 2'
-  },
-  {
-    name: 'Sarah Chen',
-    email: 'sarah.chen@stanford.edu',
-    avatar: 'avatar-3',
-    role: 'Biomedical Engineering'
-  },
-  {
-    name: 'Kenji Tanaka',
-    email: 'kenji.tanaka@gmail.com',
-    avatar: 'avatar-5',
-    role: 'Applied Mathematics'
-  }
-];
+import { useToast } from '../../context/ToastContext';
 
 export const GoogleIcon = ({ className = 'w-5 h-5' }) => (
   <svg className={className} viewBox="0 0 24 24">
@@ -48,25 +26,23 @@ export const GoogleIcon = ({ className = 'w-5 h-5' }) => (
 
 const GoogleSignInButton = ({ text = 'Continue with Google', className = '' }) => {
   const { googleLogin } = useAuth();
+  const { addToast } = useToast();
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState(null);
-  const [customName, setCustomName] = useState('');
-  const [customEmail, setCustomEmail] = useState('');
-  const [showCustomInput, setShowCustomInput] = useState(false);
-  const [showDevTip, setShowDevTip] = useState(false);
+  const tokenClientRef = useRef(null);
+  const gsiContainerRef = useRef(null);
 
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const gsiRenderRef = useRef(null);
 
-  // Initialize official Google Identity Services if a real client ID is present
+  // Initialize official Google Identity Services
   useEffect(() => {
     if (!googleClientId) return;
 
-    const initGsi = () => {
-      if (!window.google?.accounts?.id) return false;
+    const setupGoogle = () => {
+      if (!window.google?.accounts) return false;
+
       try {
+        // Initialize ID token flow (One Tap / Credential)
         window.google.accounts.id.initialize({
           client_id: googleClientId,
           callback: async (response) => {
@@ -82,8 +58,50 @@ const GoogleSignInButton = ({ text = 'Continue with Google', className = '' }) =
           cancel_on_tap_outside: true
         });
 
-        if (gsiRenderRef.current) {
-          window.google.accounts.id.renderButton(gsiRenderRef.current, {
+        // Initialize OAuth 2.0 popup token client for direct button click
+        if (window.google.accounts.oauth2) {
+          tokenClientRef.current = window.google.accounts.oauth2.initTokenClient({
+            client_id: googleClientId,
+            scope: 'email profile openid',
+            callback: async (tokenResponse) => {
+              if (tokenResponse?.error) {
+                console.error('Google OAuth token error:', tokenResponse);
+                setIsLoading(false);
+                return;
+              }
+              if (tokenResponse?.access_token) {
+                setIsLoading(true);
+                try {
+                  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                  });
+                  if (res.ok) {
+                    const profile = await res.json();
+                    const result = await googleLogin({
+                      googleId: profile.sub,
+                      email: profile.email,
+                      name: profile.name,
+                      avatar: profile.picture
+                    });
+                    if (result?.success) {
+                      navigate('/dashboard');
+                    }
+                  } else {
+                    addToast('Failed to fetch Google profile', 'error');
+                  }
+                } catch (err) {
+                  addToast(err.message || 'Google authentication failed', 'error');
+                } finally {
+                  setIsLoading(false);
+                }
+              }
+            }
+          });
+        }
+
+        // Render official Google button inside container if desired
+        if (gsiContainerRef.current) {
+          window.google.accounts.id.renderButton(gsiContainerRef.current, {
             theme: 'outline',
             size: 'large',
             width: '100%',
@@ -91,248 +109,60 @@ const GoogleSignInButton = ({ text = 'Continue with Google', className = '' }) =
             shape: 'pill'
           });
         }
+
         return true;
       } catch (err) {
-        console.warn('Google Identity Services init notice:', err);
+        console.warn('Google Identity Services setup warning:', err);
         return false;
       }
     };
 
-    if (!initGsi()) {
+    if (!setupGoogle()) {
       const interval = setInterval(() => {
-        if (initGsi()) clearInterval(interval);
-      }, 300);
+        if (setupGoogle()) clearInterval(interval);
+      }, 250);
       return () => clearInterval(interval);
     }
-  }, [googleClientId, googleLogin, navigate]);
+  }, [googleClientId, googleLogin, navigate, addToast]);
 
   const handleButtonClick = () => {
-    // If client ID is configured and GSI prompt is available, trigger Google One Tap / popup
-    if (googleClientId && window.google?.accounts?.id) {
-      try {
-        window.google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            setIsModalOpen(true);
-          }
-        });
-        return;
-      } catch (err) {
-        console.warn('Native prompt fallback:', err);
-      }
+    if (!googleClientId) {
+      addToast(
+        'Google OAuth requires VITE_GOOGLE_CLIENT_ID to be set in client/.env or Vercel Environment Variables.',
+        'warning'
+      );
+      return;
     }
-    // Otherwise open the Google Account Chooser
-    setIsModalOpen(true);
-  };
 
-  const handleAccountSelect = async (account) => {
-    setSelectedEmail(account.email);
-    setIsLoading(true);
-    const googleId = `google_${Math.abs(
-      account.email.split('').reduce((acc, char) => (acc << 5) - acc + char.charCodeAt(0), 0)
-    )}`;
-
-    const result = await googleLogin({
-      googleId,
-      email: account.email,
-      name: account.name,
-      avatar: account.avatar
-    });
-
-    setIsLoading(false);
-    if (result?.success) {
-      setIsModalOpen(false);
-      navigate('/dashboard');
+    // Trigger OAuth popup directly via token client
+    if (tokenClientRef.current) {
+      setIsLoading(true);
+      tokenClientRef.current.requestAccessToken();
+      return;
     }
-  };
 
-  const handleCustomSubmit = async (e) => {
-    e.preventDefault();
-    if (!customEmail) return;
-
-    setIsLoading(true);
-    const name = customName.trim() || customEmail.split('@')[0];
-    const googleId = `google_${Math.abs(
-      customEmail.split('').reduce((acc, char) => (acc << 5) - acc + char.charCodeAt(0), 0)
-    )}`;
-
-    const result = await googleLogin({
-      googleId,
-      email: customEmail,
-      name,
-      avatar: 'avatar-1'
-    });
-
-    setIsLoading(false);
-    if (result?.success) {
-      setIsModalOpen(false);
-      navigate('/dashboard');
+    // Fallback: trigger One Tap / prompt
+    if (window.google?.accounts?.id) {
+      window.google.accounts.id.prompt();
     }
   };
 
   return (
-    <>
-      <div className="w-full">
-        {/* If official GSI button is rendered, it can sit here */}
-        {googleClientId && <div ref={gsiRenderRef} className="hidden" />}
-
-        {/* Universal styled Google button */}
-        <button
-          type="button"
-          onClick={handleButtonClick}
-          disabled={isLoading}
-          className={`w-full py-3 px-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-sm flex items-center justify-center gap-3 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.99] disabled:opacity-50 ${className}`}
-        >
-          <GoogleIcon className="w-5 h-5 flex-shrink-0" />
-          <span>{isLoading ? 'Connecting to Google...' : text}</span>
-        </button>
-      </div>
-
-      {/* Google Account Chooser Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => !isLoading && setIsModalOpen(false)}
-        title="Sign in with Google"
-        maxWidth="max-w-md"
+    <div className="w-full">
+      <button
+        type="button"
+        onClick={handleButtonClick}
+        disabled={isLoading}
+        className={`w-full py-3 px-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-sm flex items-center justify-center gap-3 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.99] disabled:opacity-50 ${className}`}
       >
-        <div className="space-y-4">
-          <div className="text-center pb-2">
-            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center mx-auto mb-3">
-              <GoogleIcon className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Choose an account
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              to continue to <span className="font-semibold text-slate-700 dark:text-slate-300">Temora</span>
-            </p>
-          </div>
-
-          {/* Account List */}
-          <div className="space-y-2 max-h-72 overflow-y-auto">
-            {SAMPLE_GOOGLE_ACCOUNTS.map((acc) => {
-              const isSelected = selectedEmail === acc.email && isLoading;
-              return (
-                <button
-                  key={acc.email}
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleAccountSelect(acc)}
-                  className="w-full p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all flex items-center justify-between text-left group disabled:opacity-60"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-600 text-white font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
-                      {acc.name[0]}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                        {acc.name}
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                        {acc.email}
-                      </div>
-                      <div className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">
-                        {acc.role}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex-shrink-0 ml-2">
-                    {isSelected ? (
-                      <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 text-indigo-600 dark:text-indigo-400 transition-opacity">
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Custom Google Account Section */}
-          {!showCustomInput ? (
-            <button
-              type="button"
-              onClick={() => setShowCustomInput(true)}
-              disabled={isLoading}
-              className="w-full py-2.5 px-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center justify-center gap-2 transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span>Use another Google account</span>
-            </button>
-          ) : (
-            <form onSubmit={handleCustomSubmit} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
-              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                Enter your Google account details
-              </div>
-              <input
-                type="text"
-                placeholder="Full Name (e.g. Kasun Silva)"
-                value={customName}
-                onChange={(e) => setCustomName(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <input
-                type="email"
-                placeholder="Google Email (e.g. kasun@gmail.com)"
-                value={customEmail}
-                onChange={(e) => setCustomEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <div className="flex gap-2 justify-end pt-1">
-                <button
-                  type="button"
-                  onClick={() => setShowCustomInput(false)}
-                  className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading || !customEmail}
-                  className="px-4 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm disabled:opacity-50"
-                >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* Privacy & Security footer note */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 dark:text-slate-500 text-center leading-relaxed">
-            To continue, Google will share your name, email address, and profile picture with Temora.
-          </div>
-
-          {/* Developer Tip Accordion */}
-          <div className="pt-1">
-            <button
-              type="button"
-              onClick={() => setShowDevTip(!showDevTip)}
-              className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 mx-auto"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span>{showDevTip ? 'Hide Google Cloud OAuth setup' : 'How to connect real Google Cloud OAuth'}</span>
-            </button>
-
-            {showDevTip && (
-              <div className="mt-2 p-3 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-900/60 text-[11px] text-slate-600 dark:text-slate-300 space-y-1.5 leading-relaxed">
-                <div className="font-bold text-indigo-700 dark:text-indigo-300">
-                  Google Cloud Console Instructions:
-                </div>
-                <ol className="list-decimal list-inside space-y-1">
-                  <li>Go to <span className="font-mono text-indigo-600 dark:text-indigo-400">console.cloud.google.com</span> and create a project.</li>
-                  <li>Enable "Google Identity Services" / OAuth 2.0 Client ID for Web Application.</li>
-                  <li>Add your app origin (e.g. <span className="font-mono">http://localhost:5173</span> or your Vercel URL) to Authorized JavaScript Origins.</li>
-                  <li>Set <span className="font-mono text-indigo-600 dark:text-indigo-400">VITE_GOOGLE_CLIENT_ID=your_client_id</span> in your environment.</li>
-                </ol>
-              </div>
-            )}
-          </div>
-        </div>
-      </Modal>
-    </>
+        {isLoading ? (
+          <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+        ) : (
+          <GoogleIcon className="w-5 h-5 flex-shrink-0" />
+        )}
+        <span>{isLoading ? 'Connecting to Google...' : text}</span>
+      </button>
+    </div>
   );
 };
 
