@@ -46,12 +46,12 @@ const Sidebar = () => {
       {/* Brand Header */}
       <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100/80 dark:border-white/5">
         <NavLink to="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-ios group-hover:scale-105 active:scale-95 transition-all duration-300">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-ios group-hover:scale-105 active:scale-95 transition-all duration-300">
             <Clock className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-              Focus<span className="text-indigo-600 dark:text-indigo-400">Flow</span>
+              Tem<span className="text-indigo-600 dark:text-indigo-400">ora</span>
             </span>
             <span className="text-[10px] tracking-wider font-semibold uppercase text-slate-400 -mt-1">
               Study Hub

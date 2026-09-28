@@ -94,7 +94,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-[1.1]">
             Focus Better.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-500">
               Study Smarter.
             </span>
           </h1>
@@ -132,7 +132,7 @@ const LandingPage = () => {
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
                 <div className="text-xs font-mono text-slate-400">
-                  focusflow.app/dashboard
+                  temora.app/dashboard
                 </div>
                 <div className="w-12" />
               </div>
@@ -224,7 +224,7 @@ const LandingPage = () => {
               Workflow
             </h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-              How FocusFlow Works
+              How Temora Works
             </p>
             <p className="mt-4 text-slate-600 dark:text-slate-300 text-base">
               Three simple steps to transform your academic consistency.
@@ -257,20 +257,20 @@ const LandingPage = () => {
       {/* About Section */}
       <section id="about" className="py-20 bg-slate-100/60 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto mb-6 shadow-md shadow-indigo-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 text-white flex items-center justify-center mx-auto mb-6 shadow-md shadow-indigo-500/25">
             <Clock className="w-6 h-6" />
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
             Designed for Academic Excellence
           </h2>
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base">
-            FocusFlow was created to solve the digital fatigue and distraction student face daily. By blending the science of the Pomodoro technique with rigorous habit-tracking principles and clean SaaS design, FocusFlow provides students with a calm, motivating digital space to study deeply.
+            Temora was created to solve the digital fatigue and distraction students face daily. By blending the science of the Pomodoro technique with rigorous habit-tracking principles and clean SaaS design, Temora provides students with a calm, motivating digital space to study deeply.
           </p>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-b from-indigo-900 to-indigo-950 text-white">
+      <section className="py-20 relative overflow-hidden bg-gradient-to-b from-purple-950 via-indigo-950 to-slate-950 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
             Ready to upgrade your study sessions?
@@ -296,11 +296,11 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/25">
                 <Clock className="w-4 h-4" />
               </div>
               <span className="font-bold text-lg text-slate-900 dark:text-white">
-                Focus<span className="text-indigo-600 dark:text-indigo-400">Flow</span>
+                Tem<span className="text-indigo-600 dark:text-indigo-400">ora</span>
               </span>
             </div>
 
@@ -314,7 +314,7 @@ const LandingPage = () => {
             </div>
 
             <div className="text-xs text-slate-400">
-              © {new Date().getFullYear()} FocusFlow. Built for focused minds.
+              © {new Date().getFullYear()} Temora. Built for focused minds.
             </div>
           </div>
         </div>

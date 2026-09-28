@@ -51,7 +51,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
-    app: 'FocusFlow Education API',
+    app: 'Temora Education API',
     timestamp: new Date().toISOString()
   });
 });
@@ -73,7 +73,7 @@ const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);
-  console.log(`🚀 FocusFlow API Server running in ${process.env.NODE_ENV || 'development'} mode`);
+  console.log(`🚀 Temora API Server running in ${process.env.NODE_ENV || 'development'} mode`);
   console.log(`🌐 Listening on http://localhost:${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
   console.log(`===============================================`);

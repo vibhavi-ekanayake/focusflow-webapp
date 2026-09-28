@@ -57,11 +57,11 @@ const MobileNav = () => {
       {/* Mobile Top Header */}
       <header className="lg:hidden sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
         <NavLink to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/25">
             <Clock className="w-4 h-4" />
           </div>
           <span className="font-bold text-slate-900 dark:text-white">
-            Focus<span className="text-indigo-600 dark:text-indigo-400">Flow</span>
+            Tem<span className="text-indigo-600 dark:text-indigo-400">ora</span>
           </span>
         </NavLink>
 
@@ -95,10 +95,12 @@ const MobileNav = () => {
           >
             <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/25">
                   <Clock className="w-5 h-5" />
                 </div>
-                <span className="font-bold text-slate-900 dark:text-white">FocusFlow</span>
+                <span className="font-bold text-slate-900 dark:text-white">
+                  Tem<span className="text-indigo-600 dark:text-indigo-400">ora</span>
+                </span>
               </div>
               <button
                 onClick={() => setDrawerOpen(false)}

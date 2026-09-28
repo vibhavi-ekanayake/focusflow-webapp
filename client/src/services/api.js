@@ -10,7 +10,7 @@ const api = axios.create({
 // Request interceptor to attach JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('focusflow_token');
+    const token = localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,8 +26,10 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Token is invalid or expired
       const isAuthRoute = window.location.pathname === '/login' || window.location.pathname === '/register';
-      if (!isAuthRoute && localStorage.getItem('focusflow_token')) {
+      if (!isAuthRoute && (localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token'))) {
+        localStorage.removeItem('temora_token');
         localStorage.removeItem('focusflow_token');
+        localStorage.removeItem('temora_user');
         localStorage.removeItem('focusflow_user');
         window.location.href = '/login?expired=true';
       }

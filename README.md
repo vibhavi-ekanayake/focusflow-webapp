@@ -1,4 +1,4 @@
-# FocusFlow — Modern Education & Focus Platform
+# Temora — Modern Education & Focus Platform
 
 A production-quality education-focused web application designed to help students study, stay focused, track progress, and manage their study time with scientific habit-building principles.
 

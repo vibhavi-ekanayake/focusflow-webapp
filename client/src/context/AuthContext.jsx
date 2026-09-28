@@ -6,12 +6,14 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('focusflow_token'));
+  const [token, setToken] = useState(() => localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token'));
   const [isLoading, setIsLoading] = useState(true);
   const { addToast } = useToast();
 
   const logout = useCallback(() => {
+    localStorage.removeItem('temora_token');
     localStorage.removeItem('focusflow_token');
+    localStorage.removeItem('temora_user');
     localStorage.removeItem('focusflow_user');
     setToken(null);
     setUser(null);
@@ -20,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   // Check auth state on mount
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem('focusflow_token');
+      const storedToken = localStorage.getItem('temora_token') || localStorage.getItem('focusflow_token');
       if (!storedToken) {
         setIsLoading(false);
         return;
@@ -49,6 +51,7 @@ export const AuthProvider = ({ children }) => {
       const res = await api.post('/auth/login', { email, password });
       if (res.data?.success) {
         const { token: newToken, user: userData } = res.data;
+        localStorage.setItem('temora_token', newToken);
         localStorage.setItem('focusflow_token', newToken);
         setToken(newToken);
         setUser(userData);
@@ -76,10 +79,11 @@ export const AuthProvider = ({ children }) => {
       const res = await api.post('/auth/register', { name, email, password });
       if (res.data?.success) {
         const { token: newToken, user: userData } = res.data;
+        localStorage.setItem('temora_token', newToken);
         localStorage.setItem('focusflow_token', newToken);
         setToken(newToken);
         setUser(userData);
-        addToast(`Welcome to FocusFlow, ${userData.name}!`, 'success');
+        addToast(`Welcome to Temora, ${userData.name}!`, 'success');
         return { success: true, user: userData };
       }
     } catch (err) {
@@ -104,6 +108,7 @@ export const AuthProvider = ({ children }) => {
       if (res.data?.success) {
         const updatedUser = { ...user, ...res.data.user };
         setUser(updatedUser);
+        localStorage.setItem('temora_user', JSON.stringify(updatedUser));
         localStorage.setItem('focusflow_user', JSON.stringify(updatedUser));
         addToast('Profile updated successfully', 'success');
         return { success: true };

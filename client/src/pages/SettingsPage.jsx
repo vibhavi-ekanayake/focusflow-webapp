@@ -76,7 +76,7 @@ const SettingsPage = () => {
               Appearance & Theme
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Select how FocusFlow looks on your device.
+              Select how Temora looks on your device.
             </p>
           </div>
 

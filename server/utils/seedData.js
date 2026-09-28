@@ -13,22 +13,22 @@ export const seedDemoData = async (shouldClose = false) => {
     }
 
     console.log('[Seed] Clearing existing demo data...');
-    const existingDemoUser = await User.findOne({ email: 'demo@focusflow.edu' });
-    if (existingDemoUser) {
-      await StudySession.deleteMany({ userId: existingDemoUser._id });
-      await User.deleteOne({ _id: existingDemoUser._id });
+    const oldUsers = await User.find({ email: { $in: ['demo@focusflow.edu', 'demo@temora.edu'] } });
+    for (const u of oldUsers) {
+      await StudySession.deleteMany({ userId: u._id });
+      await User.deleteOne({ _id: u._id });
     }
 
     console.log('[Seed] Creating demo user...');
     const demoUser = await User.create({
       name: 'Alex Rivera',
-      email: 'demo@focusflow.edu',
+      email: 'demo@temora.edu',
       password: 'password123',
       avatar: 'avatar-1',
       dailyGoal: 150, // 2.5 hours
       weeklyGoal: 900, // 15 hours
       settings: {
-        theme: 'dark',
+        theme: 'light',
         defaultFocusDuration: 25,
         defaultBreakDuration: 5,
         soundEnabled: true,
@@ -118,7 +118,7 @@ export const seedDemoData = async (shouldClose = false) => {
 
     await StudySession.insertMany(sessions);
     console.log(`[Seed] Successfully seeded ${sessions.length} study sessions for demo user.`);
-    console.log('[Seed] Demo credentials: demo@focusflow.edu / password123');
+    console.log('[Seed] Demo credentials: demo@temora.edu / password123');
 
     if (shouldClose) {
       await closeDB();

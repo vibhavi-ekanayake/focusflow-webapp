@@ -41,7 +41,7 @@ const LoginPage = () => {
   };
 
   const handleDemoFill = () => {
-    setEmail('demo@focusflow.edu');
+    setEmail('demo@temora.edu');
     setPassword('password123');
     setFormError('');
   };
@@ -52,11 +52,11 @@ const LoginPage = () => {
         {/* Brand Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-4 group">
-            <div className="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
               <Clock className="w-6 h-6" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight">
-              Focus<span className="text-indigo-600 dark:text-indigo-400">Flow</span>
+              Tem<span className="text-indigo-600 dark:text-indigo-400">ora</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
