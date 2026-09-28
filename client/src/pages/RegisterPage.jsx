@@ -92,7 +92,7 @@ const RegisterPage = () => {
             <Input
               label="Full Name"
               type="text"
-              placeholder="e.g. Alex Rivera"
+              placeholder="e.g. Lahiru Perera"
               icon={User}
               value={name}
               onChange={(e) => {
