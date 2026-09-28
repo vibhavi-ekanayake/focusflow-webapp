@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { formatMinutesHuman } from '../utils/formatters';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Button from '../components/common/Button';
+import UserAvatar from '../components/common/UserAvatar';
 import {
   Trophy,
   Crown,
@@ -242,12 +243,8 @@ const RankersPage = () => {
               {secondPlace && (
                 <div className="order-2 md:order-1 flex flex-col items-center text-center">
                   <div className="relative mb-3 group">
-                    <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-slate-300 via-slate-100 to-slate-400 shadow-lg">
-                      <div className={`w-full h-full rounded-full ${getAvatarColor(secondPlace.name)} flex items-center justify-center text-white font-extrabold text-lg`}>
-                        {secondPlace.name.charAt(0)}
-                      </div>
-                    </div>
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-200 text-slate-800 border border-slate-300 shadow-sm">
+                    <UserAvatar avatar={secondPlace.avatar} name={secondPlace.name} size="lg" className="ring-4 ring-slate-300 shadow-lg" />
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-200 text-slate-800 border border-slate-300 shadow-sm z-10">
                       🥈 #2
                     </span>
                   </div>
@@ -279,13 +276,9 @@ const RankersPage = () => {
               {firstPlace && (
                 <div className="order-1 md:order-2 flex flex-col items-center text-center">
                   <div className="relative mb-3 group">
-                    <Crown className="w-7 h-7 text-amber-400 absolute -top-7 left-1/2 -translate-x-1/2 filter drop-shadow-md animate-bounce" />
-                    <div className="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-amber-300 via-yellow-200 to-amber-500 shadow-xl shadow-amber-500/20">
-                      <div className={`w-full h-full rounded-full ${getAvatarColor(firstPlace.name)} flex items-center justify-center text-white font-extrabold text-2xl`}>
-                        {firstPlace.name.charAt(0)}
-                      </div>
-                    </div>
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[11px] font-black bg-amber-400 text-amber-950 border border-amber-300 shadow-md">
+                    <Crown className="w-7 h-7 text-amber-400 absolute -top-7 left-1/2 -translate-x-1/2 filter drop-shadow-md animate-bounce z-10" />
+                    <UserAvatar avatar={firstPlace.avatar} name={firstPlace.name} size="xl" className="ring-4 ring-amber-400 shadow-xl shadow-amber-500/20" />
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[11px] font-black bg-amber-400 text-amber-950 border border-amber-300 shadow-md z-10">
                       🥇 #1
                     </span>
                   </div>
@@ -321,12 +314,8 @@ const RankersPage = () => {
               {thirdPlace && (
                 <div className="order-3 flex flex-col items-center text-center">
                   <div className="relative mb-3 group">
-                    <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-amber-700 via-amber-600 to-amber-800 shadow-lg">
-                      <div className={`w-full h-full rounded-full ${getAvatarColor(thirdPlace.name)} flex items-center justify-center text-white font-extrabold text-lg`}>
-                        {thirdPlace.name.charAt(0)}
-                      </div>
-                    </div>
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-700 text-amber-100 border border-amber-800 shadow-sm">
+                    <UserAvatar avatar={thirdPlace.avatar} name={thirdPlace.name} size="lg" className="ring-4 ring-amber-700 shadow-lg" />
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-700 text-amber-100 border border-amber-800 shadow-sm z-10">
                       🥉 #3
                     </span>
                   </div>
@@ -408,9 +397,7 @@ const RankersPage = () => {
                       </div>
 
                       {/* Avatar */}
-                      <div className={`w-10 h-10 rounded-full ${getAvatarColor(student.name)} text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0`}>
-                        {student.name.charAt(0)}
-                      </div>
+                      <UserAvatar avatar={student.avatar} name={student.name} size="md" />
 
                       {/* Name & Specialization */}
                       <div className="min-w-0 flex-1">

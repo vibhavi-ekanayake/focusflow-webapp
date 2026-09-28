@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema(
       theme: {
         type: String,
         enum: ['light', 'dark', 'system'],
-        default: 'dark'
+        default: 'light'
       },
       defaultFocusDuration: {
         type: Number,

@@ -3,6 +3,7 @@ import { Send, MessageSquare, Sparkles } from 'lucide-react';
 import { formatTimeOfDay } from '../../utils/formatters';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
+import UserAvatar from '../common/UserAvatar';
 
 const RoomChat = ({
   messages = [],
@@ -84,9 +85,12 @@ const RoomChat = ({
                 key={index}
                 className={`flex items-start gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
               >
-                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 shadow-sm">
-                  {msg.name ? msg.name.charAt(0).toUpperCase() : 'U'}
-                </div>
+                <UserAvatar
+                  avatar={msg.avatar || (isMe ? user?.avatar : null)}
+                  name={msg.name}
+                  size="xs"
+                  className="mt-0.5"
+                />
 
                 <div className={`max-w-[80%] ${isMe ? 'text-right' : 'text-left'}`}>
                   <div className="flex items-baseline gap-1.5 mb-0.5">

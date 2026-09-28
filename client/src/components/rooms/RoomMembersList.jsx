@@ -1,6 +1,6 @@
-import React from 'react';
 import { Users, Crown, Zap, Coffee, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import UserAvatar from '../common/UserAvatar';
 
 const RoomMembersList = ({
   members = [],
@@ -75,9 +75,7 @@ const RoomMembersList = ({
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-sm">
-                  {member.name ? member.name.charAt(0).toUpperCase() : 'U'}
-                </div>
+                <UserAvatar avatar={member.avatar || (isCurrentUser ? user?.avatar : null)} name={member.name} size="sm" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <p className="text-xs font-bold text-slate-900 dark:text-white truncate">

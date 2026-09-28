@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import UserAvatar from '../common/UserAvatar';
 
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -133,9 +134,7 @@ const MobileNav = () => {
 
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs">
-                  {user?.name ? user.name.charAt(0) : 'U'}
-                </div>
+                <UserAvatar avatar={user?.avatar} name={user?.name} size="sm" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
                     {user?.name || 'Student'}

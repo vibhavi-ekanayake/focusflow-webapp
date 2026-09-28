@@ -102,7 +102,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await api.put('/users/profile', profileData);
       if (res.data?.success) {
-        setUser((prev) => ({ ...prev, ...res.data.user }));
+        const updatedUser = { ...user, ...res.data.user };
+        setUser(updatedUser);
+        localStorage.setItem('focusflow_user', JSON.stringify(updatedUser));
         addToast('Profile updated successfully', 'success');
         return { success: true };
       }
